@@ -82,11 +82,11 @@ place_of_death = {1: 'Hospital, clinic or Medical Center - Inpatient',
 9: 'Place of death unknown'}
 
 '''Marital_Status = line[83].strip()'''
-marital_status = {'S': 'never married, single',
-'M': 'Marries',
-'W': 'Widowed',
-'D': 'Divorced',
-'U': 'Marital Status unknown'}
+marital_status = {'1': 'S - never married, single',
+'2': 'M - Marries',
+'3': 'D - Divorced',
+'4': 'W - Widowed',
+'5': 'U - Marital Status unknown'}
 
 '''DOW_of_Death = line[84].strip()'''
 '''Day of the week of death'''
@@ -196,27 +196,33 @@ def education(value):
     '''
     if value == ' ':
         return 99
-    elif value == ' 07':
+    elif value in [' 0','0']:
+        return 0
+    elif value in [' 06','6']:
+        return 6
+    elif value in [' 07','7']:
         return 7
-    elif value == ' 08':
+    elif value in [' 08', '8']:
         return 8
-    elif value == ' 09':
+    elif value in [' 09','9']:
         return 9
-    elif value == ' 10':
+    elif value in [' 10','10']:
         return 10
-    elif value == ' 11':
+    elif value in [' 11','11']:
             return 11
-    elif value == ' 12':
+    elif value in [' 12', '12']:
         return 12
-    elif value == ' 13':
+    elif value in [' 13','13']:
         return 13
-    elif value == ' 14':
+    elif value in [' 14', '14']:
         return 14
-    elif value == ' 16':
+    elif value in [' 15', '15']:
+        return 15
+    elif value in [' 16','16']:
             return 16
-    elif value == ' 17':
+    elif value in [' 17', '17']:
         return 17
-    elif value == ' 99':
+    elif value in [' 99','99']:
         return 99
     elif value ==' 15':
         return 15
@@ -234,6 +240,18 @@ def month_of_death(value):
       return value-100
     else:
       return value
+
+def Marital_Status_func(value):
+    if value == ' S':
+        return 1
+    elif value == ' M':
+        return 2
+    elif value == ' D':
+        return 3
+    elif value == ' W':
+        return 4
+    elif value == ' U':
+        return 5
 
 def sex(value):
     '''
@@ -256,13 +274,15 @@ if __name__ == '__main__':
     print "Education column updated as 'Education'"
     df_suicide['Month_Of_Death'] = df_suicide[' Month_Of_Death'].apply(month_of_death)
     print "Month Of Death column updated as 'Month_of_Death'"
+    df_suicide['DOW_of_Death'] = df_suicide[' DOW_of_Death'].apply(month_of_death)
+    print "Day of Week Of Death column updated as 'DOW_of_Death'"
     df_suicide['Sex'] = df_suicide[' Sex'].apply(sex)
     print "Sex column updated as 'Sex'"
     df_suicide['Age'] = df_suicide[' Age_Value']
     print "Age column name change"
     df_suicide['Age_Groups'] = df_suicide[' Age_Recode_12']
     print "Age group column name change"
-    df_suicide['Marital_Status'] = df_suicide[' Marital_Status']
+    df_suicide['Marital_Status'] = df_suicide[' Marital_Status'].apply(Marital_Status_func)
     print "Marital Status column name change"
     df_suicide['Place_Of_Death'] = df_suicide[' Place_Of_Death']
     print "Place_Of_Death column name change"
@@ -272,12 +292,14 @@ if __name__ == '__main__':
     print ''
     print 'Dataset is available as df_suicide_clean;'
     print 'Dictionary list of all columns definition is available in dictionary_list;'
+    print 'To see the order in which dictinary are stored, see dictionary_list_names'
     print 'To use, chose dictionary, ditionary keys are the various values of the column.'
 
-    column_list = ['Resident_Status','Education','Month_Of_Death', 'Sex',
+    column_list = ['Resident_Status','Education','Month_Of_Death', 'DOW_of_Death', 'Sex',
             'Age', 'Age_Groups', 'Marital_Status', 'Place_Of_Death', 'Race']
 
     df_suicide_clean = df_suicide[column_list]
-
-    dictionary_list = [Resident, education, month_of_death, sex, Age_Recode_12,
-                    place_of_death, marital_status, DOW]
+    dictionary_list_names = ['Resident_Status','Education','Month_Of_Death', 'DOW_of_Death', 'Sex',
+             'Age_Groups', 'Marital_Status', 'Place_Of_Death', 'Race']
+    dictionary_list = [Resident, education, month_of_death, DOW, sex, Age_Recode_12,
+                    marital_status, place_of_death, race]
